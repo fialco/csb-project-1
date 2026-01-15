@@ -6,6 +6,12 @@
 
   <body>
     <h1>PhoneyPay</h1>
+
+    <form action="logout/" method="POST">
+      {% csrf_token %}
+      <input type="submit" value="Logout" />
+    </form>
+
     <p>User: {{user.username}}</p>
     <p>Phone number: {{account.phone}}</p>
     <p>Balance: {{account.balance}}</p>
