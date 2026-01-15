@@ -15,5 +15,22 @@
     <p>User: {{user.username}}</p>
     <p>Phone number: {{account.phone}}</p>
     <p>Balance: {{account.balance}}</p>
+
+    <h2>Send money:</h2>
+    <form method="post">
+      {% csrf_token %} To:
+      <select name="receiver">
+        {% for number in numbers %}
+        <option value="{{ number.id }}">{{ number.phone }}</option>
+        {% endfor %}
+      </select>
+      <br />
+
+      Amount:
+      <input type="number" name="amount" />
+      <br />
+
+      <button type="submit">Send</button>
+    </form>
   </body>
 </html>
