@@ -7,17 +7,17 @@
   <body>
     <h1>PhoneyPay</h1>
 
+    Hello {{user.username}}!
+
     <form action="logout/" method="POST">
       {% csrf_token %}
       <input type="submit" value="Logout" />
     </form>
-
-    <p>User: {{user.username}}</p>
     <p>Phone number: {{account.phone}}</p>
     <p>Balance: {{account.balance}}</p>
 
     <h2>Send money:</h2>
-    <form method="post">
+    <form action="send/" method="POST">
       {% csrf_token %} To:
       <select name="receiver">
         {% for number in numbers %}
