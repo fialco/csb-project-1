@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.db import transaction
-from .models import Account
+from .models import Account, Transaction
 
 
 @transaction.atomic
@@ -21,6 +21,8 @@ def transfer(sender, receiver, amount):
 
     acc1.save()
     acc2.save()
+
+    Transaction.objects.create(from_account=acc1, to_account=acc2, amount=amount)
 
 
 @login_required

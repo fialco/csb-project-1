@@ -20,4 +20,4 @@ python manage.py migrate
 python manage.py runserver
 ```
 
-2. Access the app with a browser by going to [http://localhost:8000]
+2. Access the app with a browser by going to [http://localhost:8000](http://localhost:8000)
