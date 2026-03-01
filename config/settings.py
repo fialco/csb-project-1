@@ -28,7 +28,8 @@ SECRET_KEY = os.getenv(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
-# Flaw 5 fix: swap DEBUG to False instead of True
+# Flaw 5 fix: Set debug to false through env variable or swap DEBUG default to False instead of True
+# DEBUG = os.getenv("DEBUG", False)
 DEBUG = os.getenv("DEBUG", True)
 
 # Flaw 5 fix: Add specific allowed hosts
