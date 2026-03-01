@@ -31,6 +31,9 @@ def transfer(sender, receiver, amount):
 @csrf_exempt
 def sendView(request):
     sender = Account.objects.get(owner__username=request.user)
+
+    # sender = Account.objects.get(int(request.POST.get("sender")))
+
     receiver = int(request.POST.get("receiver"))
     amount = int(request.POST.get("amount"))
 
@@ -43,4 +46,11 @@ def sendView(request):
 def index(request):
     account = Account.objects.get(owner__username=request.user)
     numbers = Account.objects.filter(~Q(phone=account.phone))
-    return render(request, "pages/index.html", {"account": account, "numbers": numbers})
+    sent = Transaction.objects.filter(from_account=account.id)
+    received = Transaction.objects.filter(to_account=account.id)
+
+    return render(
+        request,
+        "pages/index.html",
+        {"account": account, "numbers": numbers, "sent": sent, "received": received},
+    )
