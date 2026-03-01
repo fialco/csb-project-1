@@ -18,7 +18,11 @@
 
     <h2>Send money:</h2>
     <form action="send/" method="POST">
-      {% csrf_token %} To:
+      {% comment %}
+      Flaw 2 fix: add csrf_token
+      {% csrf_token %}
+      {% endcomment %}
+      To:
       <select name="receiver">
         {% for number in numbers %}
         <option value="{{ number.id }}">{{ number.phone }}</option>
