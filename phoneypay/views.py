@@ -5,6 +5,9 @@ from django.db.models import Q
 from django.db import transaction
 from django.db.models import Sum, Count
 from django.views.decorators.csrf import csrf_exempt
+
+# Flaw 4 fix: import and add django ratelimit
+# from django_ratelimit.decorators import ratelimit
 from .models import Account, Transaction
 
 
@@ -49,6 +52,8 @@ def transfer(sender, receiver, amount):
 @login_required
 # Flaw 2 fix: remove @csrf_exempt and add {% csrf_token %} in index.html
 @csrf_exempt
+# Flaw 4 fix: import and add django ratelimit
+# @ratelimit(key="ip", rate="5/h", method="POST")
 def send_view(request):
     sender = Account.objects.get(owner__username=request.user)
     receiver = int(request.POST.get("receiver"))
