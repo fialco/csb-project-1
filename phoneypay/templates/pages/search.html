@@ -8,18 +8,19 @@
     {% if results %}
     <table border="1">
       <tr>
-        <th>Number</th>
+        <th>Sender</th>
+        <th>Receiver</th>
         <th>Amount</th>
         <th>Date</th>
       </tr>
       {% for transaction in results %}
       <tr>
-        {% if transaction.to_account.phone == account.phone %}
         <td>{{transaction.from_account.phone}}</td>
-        <td style="color: green">+{{transaction.amount}}€</td>
-        {% else %}
         <td>{{transaction.to_account.phone}}</td>
-        <td>-{{transaction.amount}}€</td>
+        {% if transaction.to_account.phone == account.phone %}
+          <td style="color: green">+{{transaction.amount}}€</td>
+        {% else %}
+          <td>-{{transaction.amount}}€</td>
         {% endif %}
         <td>{{transaction.timestamp}}</td>
       </tr>
