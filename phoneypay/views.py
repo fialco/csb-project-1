@@ -47,11 +47,52 @@ def search_view(request):
     account = Account.objects.get(owner__username=request.user)
     phone = request.GET.get("phone", "")
 
+    # FLAW 3: A03:2021 – Injection
+    query = f"""SELECT t.*
+FROM phoneypay_transaction t
+INNER JOIN phoneypay_account fa
+    ON t.from_account_id = fa.id
+INNER JOIN phoneypay_account ta
+    ON t.to_account_id = ta.id
+WHERE
+    (
+        t.from_account_id = '{account.id}'
+        AND ta.phone = '{phone}'
+    )
+    OR
+    (
+        t.to_account_id = '{account.id}'
+        AND fa.phone = '{phone}'
+    )"""
+    results = Transaction.objects.raw(query)
+
+    # Flaw 3 fix version 1: switch to parameters
+    #
+    # query = f"""SELECT t.*
+    # FROM phoneypay_transaction t
+    # INNER JOIN phoneypay_account fa
+    #    ON t.from_account_id = fa.id
+    # INNER JOIN phoneypay_account ta
+    #    ON t.to_account_id = ta.id
+    # WHERE
+    #    (
+    #        t.from_account_id = %s
+    #        AND ta.phone = %s
+    #    )
+    #    OR
+    #    (
+    #        t.to_account_id = %s
+    #        AND fa.phone = %s
+    #    )"""
+    #    results = Transaction.objects.raw(query, [account.id, phone, account.id, phone])
+
+    # Flaw 3 fix version 2: use Django ORM query
+    """
     results = Transaction.objects.select_related("from_account", "to_account").filter(
         Q(from_account_id=account.id, to_account__phone=phone)
         | Q(to_account_id=account.id, from_account__phone=phone)
     )
-
+    """
     return render(
         request, "pages/search.html", {"account": account, "results": results}
     )
