@@ -1,9 +1,15 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Q
 from django.db import transaction
 from django.views.decorators.csrf import csrf_exempt
 from .models import Account, Transaction
+
+
+@staff_member_required
+def statistics_view(request):
+    return render(request, "pages/statistics.html")
 
 
 @transaction.atomic
@@ -29,14 +35,10 @@ def transfer(sender, receiver, amount):
 @login_required
 # Flaw 2 fix: remove @csrf_exempt
 @csrf_exempt
-def sendView(request):
+def send_view(request):
     sender = Account.objects.get(owner__username=request.user)
-
-    # sender = Account.objects.get(int(request.POST.get("sender")))
-
     receiver = int(request.POST.get("receiver"))
     amount = int(request.POST.get("amount"))
-
     transfer(sender.id, receiver, amount)
 
     return redirect("/")

@@ -13,6 +13,11 @@
       {% csrf_token %}
       <input type="submit" value="Logout" />
     </form>
+
+    {% if user.is_staff %}
+    <a href="/statistics">Statistics</a>
+    {% endif %}
+
     <p>Phone number: {{account.phone}}</p>
     <p>Balance: {{account.balance}}</p>
 
@@ -54,9 +59,9 @@
         <td>{{transaction.from_account.phone}}</td>
         <td>{{transaction.to_account.phone}}</td>
         {% if transaction.to_account.phone == account.phone %}
-          <td style="color: green">+{{transaction.amount}}€</td>
+        <td style="color: green">+{{transaction.amount}}€</td>
         {% else %}
-          <td>-{{transaction.amount}}€</td>
+        <td>-{{transaction.amount}}€</td>
         {% endif %}
         <td>{{transaction.timestamp}}</td>
       </tr>
