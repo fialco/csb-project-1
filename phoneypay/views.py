@@ -3,13 +3,27 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Q
 from django.db import transaction
+from django.db.models import Sum, Count
 from django.views.decorators.csrf import csrf_exempt
 from .models import Account, Transaction
 
 
-@staff_member_required
+# Flaw 1 fix: add check for proper authentication
+# @staff_member_required
 def statistics_view(request):
-    return render(request, "pages/statistics.html")
+    total_users = Account.objects.count()
+
+    transfer_stats = Transaction.objects.aggregate(
+        total_transfers=Count("id"),
+        total_amount=Sum("amount"),
+    )
+
+    statistics = {
+        "total_users": total_users,
+        "total_transfers": transfer_stats["total_transfers"],
+        "total_amount": transfer_stats["total_amount"],
+    }
+    return render(request, "pages/statistics.html", {"statistics": statistics})
 
 
 @transaction.atomic
