@@ -47,7 +47,7 @@ def transfer(sender, receiver, amount):
 
 
 @login_required
-# Flaw 2 fix: remove @csrf_exempt
+# Flaw 2 fix: remove @csrf_exempt and add {% csrf_token %} in index.html
 @csrf_exempt
 def send_view(request):
     sender = Account.objects.get(owner__username=request.user)
@@ -125,8 +125,6 @@ def index(request):
         .filter(Q(from_account_id=account.id) | Q(to_account=account.id))
         .order_by("timestamp")
     )
-
-    print(transactions)
 
     return render(
         request,
