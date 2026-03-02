@@ -43,14 +43,35 @@ def sendView(request):
 
 
 @login_required
+def search_view(request):
+    account = Account.objects.get(owner__username=request.user)
+    phone = request.GET.get("phone", "")
+
+    results = Transaction.objects.select_related("from_account", "to_account").filter(
+        Q(from_account_id=account.id, to_account__phone=phone)
+        | Q(to_account_id=account.id, from_account__phone=phone)
+    )
+
+    return render(
+        request, "pages/search.html", {"account": account, "results": results}
+    )
+
+
+@login_required
 def index(request):
     account = Account.objects.get(owner__username=request.user)
     numbers = Account.objects.filter(~Q(phone=account.phone))
-    sent = Transaction.objects.filter(from_account=account.id)
-    received = Transaction.objects.filter(to_account=account.id)
+
+    transactions = Transaction.objects.select_related(
+        "from_account", "to_account"
+    ).filter(Q(from_account_id=account.id) | Q(to_account=account.id))
 
     return render(
         request,
         "pages/index.html",
-        {"account": account, "numbers": numbers, "sent": sent, "received": received},
+        {
+            "account": account,
+            "numbers": numbers,
+            "transactions": transactions,
+        },
     )

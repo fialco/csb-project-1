@@ -18,10 +18,7 @@
 
     <h2>Send money:</h2>
     <form action="send/" method="POST">
-      {% comment %}
-      Flaw 2 fix: add csrf_token
-      {% csrf_token %}
-      {% endcomment %}
+      {% comment %} Flaw 2 fix: add csrf_token {% csrf_token %} {% endcomment %}
       To:
       <select name="receiver">
         {% for number in numbers %}
@@ -37,20 +34,32 @@
       <button type="submit">Send</button>
     </form>
 
-    <h2>Money sent</h2>
+    <h2>Search Transactions by Phone:</h2>
+    <form action="search/" method="GET">
+      Phone number:
+      <input type="text" name="phone" />
+      <button type="submit">Search</button>
+    </form>
 
-    <ul>
-      {% for transaction in sent %}
-      <li>Sent {{transaction.amount}}€ in {{transaction.timestamp}}</li>
+    <h2>Transaction history</h2>
+    <table border="1">
+      <tr>
+        <th>Number</th>
+        <th>Amount</th>
+        <th>Date</th>
+      </tr>
+      {% for transaction in transactions %}
+      <tr>
+        {% if transaction.to_account.phone == account.phone %}
+        <td>{{transaction.from_account.phone}}</td>
+        <td style="color: green">+{{transaction.amount}}€</td>
+        {% else %}
+        <td>{{transaction.to_account.phone}}</td>
+        <td>-{{transaction.amount}}€</td>
+        {% endif %}
+        <td>{{transaction.timestamp}}</td>
+      </tr>
       {% endfor %}
-    </ul>
-
-    <h2>Money received</h2>
-
-    <ul>
-      {% for transaction in received %}
-      <li>Received {{transaction.amount}}€ in {{transaction.timestamp}}</li>
-      {% endfor %}
-    </ul>
+    </table>
   </body>
 </html>

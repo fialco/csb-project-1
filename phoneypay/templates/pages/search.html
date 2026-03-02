@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Search Results - PhoneyPay</title>
+  </head>
+  <body>
+    <h1>Search Results</h1>
+    {% if results %}
+    <table border="1">
+      <tr>
+        <th>Number</th>
+        <th>Amount</th>
+        <th>Date</th>
+      </tr>
+      {% for transaction in results %}
+      <tr>
+        {% if transaction.to_account.phone == account.phone %}
+        <td>{{transaction.from_account.phone}}</td>
+        <td style="color: green">+{{transaction.amount}}€</td>
+        {% else %}
+        <td>{{transaction.to_account.phone}}</td>
+        <td>-{{transaction.amount}}€</td>
+        {% endif %}
+        <td>{{transaction.timestamp}}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    {% else %}
+    <p>No results found</p>
+    {% endif %}
+
+    <a href="/">Return</a>
+  </body>
+</html>
