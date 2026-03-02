@@ -15,7 +15,7 @@ def statistics_view(request):
 
     transfer_stats = Transaction.objects.aggregate(
         total_transfers=Count("id"),
-        total_amount=Sum("amount"),
+        total_amount=Sum("amount", default=0),
     )
 
     statistics = {
@@ -107,7 +107,8 @@ WHERE
     results = Transaction.objects.select_related("from_account", "to_account").filter(
         Q(from_account_id=account.id, to_account__phone=phone)
         | Q(to_account_id=account.id, from_account__phone=phone)
-    )
+    ).order_by("timestamp")
+
     """
     return render(
         request, "pages/search.html", {"account": account, "results": results}
@@ -119,9 +120,13 @@ def index(request):
     account = Account.objects.get(owner__username=request.user)
     numbers = Account.objects.filter(~Q(phone=account.phone))
 
-    transactions = Transaction.objects.select_related(
-        "from_account", "to_account"
-    ).filter(Q(from_account_id=account.id) | Q(to_account=account.id))
+    transactions = (
+        Transaction.objects.select_related("from_account", "to_account")
+        .filter(Q(from_account_id=account.id) | Q(to_account=account.id))
+        .order_by("timestamp")
+    )
+
+    print(transactions)
 
     return render(
         request,
