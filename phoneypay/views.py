@@ -89,7 +89,7 @@ WHERE
 
     # Flaw 3 fix version 1: switch to parameters
     #
-    # query = f"""SELECT t.*
+    # query = """SELECT t.*
     # FROM phoneypay_transaction t
     # INNER JOIN phoneypay_account fa
     #    ON t.from_account_id = fa.id
