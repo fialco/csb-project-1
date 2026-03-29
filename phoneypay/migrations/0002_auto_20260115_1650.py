@@ -3,6 +3,7 @@
 from django.db import migrations
 
 
+# Available pre-made users for testing
 def create_initial_data(apps, schema_editor):
     User = apps.get_model("auth", "User")
     Account = apps.get_model("phoneypay", "Account")
