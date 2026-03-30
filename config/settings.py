@@ -32,9 +32,7 @@ SECRET_KEY = os.getenv(
 # DEBUG = os.getenv("DEBUG", False)
 DEBUG = os.getenv("DEBUG", True)
 
-# Flaw 5 fix: Add specific allowed hosts
-# ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["127.0.0.1", "localhost"]
 
 # Application definition
 
